@@ -1,0 +1,71 @@
+version: "2.4"
+
+services:
+  redis:
+    container_name: redis
+    image: redis:5
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - /opt/databases/redis:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+
+  mariadb:
+    container_name: mariadb
+    image: mysql:5.7
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_DATABASE=database
+      - MYSQL_ROOT_PASSWORD=root_pass
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pass
+    volumes:
+      - /opt/databases/mysql:/var/lib/mysql
+      - ../logs/mysql:/var/log/mysql
+      - "/opt/my.cnf:/etc/my.cnf"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_USER=root
+      - PMA_PASSWORD=root_pass
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+
+  laravel:
+    container_name: laravel
+    image: business1.webike.net/base/laravel:php7.4
+    restart: always
+    depends_on:
+      - mariadb
+      - redis
+    ports:
+      - 80:80
+    volumes:
+      - .:/opt/html
+      - ../logs/laravel:/var/log/apache2:rw
+    environment: 
+      - APP_ENV=local
+    working_dir: /opt/html
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
