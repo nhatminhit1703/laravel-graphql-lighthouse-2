@@ -9,3 +9,31 @@ type Post {
     content: String
     author: User! @belongsTo
 }
+
+# type User {
+#   id: ID!
+#   name: String!
+#   email: String!
+#   created_at: DateTime!
+#   updated_at: DateTime!
+#   posts: [Post!]! @hasMany
+# }
+
+# type Post {
+#   id: ID!
+#   title: String!
+#   content: String!
+#   author: User! @belongsTo
+#   comments: [Comment!]! @hasMany
+# }
+
+# type Comment {
+#   id: ID!
+#   reply: String!
+#   post: Post! @belongsTo
+# }
+type Comment {
+  id: ID!
+  reply: String!
+  post: Post! @belongsTo
+}
