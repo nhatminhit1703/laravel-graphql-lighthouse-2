@@ -61,7 +61,6 @@ services:
       - 80:80
     volumes:
       - .:/opt/html
-      - ../logs/laravel:/var/log/apache2:rw
     environment: 
       - APP_ENV=local
     working_dir: /opt/html

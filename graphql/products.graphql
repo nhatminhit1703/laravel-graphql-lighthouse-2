@@ -1,0 +1,50 @@
+extend type Query {
+    products(
+        orderBy: _ @orderBy(columns: ["updated_at", "name", "url_rewrite"])
+        hasPrice: _ @whereHasConditions(columns: ["price","name"])
+    ): [Product!]! @paginate(defaultCount: 10, maxCount: 20,  scopes: ["active"])
+    product(id: ID @eq): Product @find
+}
+
+type Product {
+    id: ID!
+    name: String!
+    url_rewrite: String!
+    updated_at: String!
+    price: [Price!]! @hasMany
+    manufacturer: Manufacturer! @belongsTo
+    images: [Images!]! @hasMany
+    reviews: [Reviews!]! @hasMany
+}
+type Price {
+    id: ID!
+    rule_date: String!
+    date_start: String!
+    date_end: String!
+    product_id: String!
+    name: String!
+    role_id: String!
+    price: String!
+}
+type Manufacturer {
+    id: ID!
+    name: String!
+    url_rewrite: Int!
+}
+type Images{
+    id: ID!
+    product_id: Int!
+    thumbnail: String!
+    image: String!
+}
+type Reviews{
+    id: ID!
+    customer_id: Int!
+    nick_name: String
+    ranking: Int
+    title: String
+    content: String!
+    product_id: Int!
+    product_sku: String!
+    product_name: String
+}
